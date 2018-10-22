@@ -50,7 +50,11 @@ async def get_task(session_id: int, task_number: int) -> None:
     params = {'sessionId': session_id}
     response = await fetch(url=f'{URL}gettask/{task_number}')
     response = json.loads(response)
+    await parse_get_task(response)
 
+
+async def parse_get_task(response: dict) -> None:
+    task_number = response.get('taskNr')
     description = response.get('description')
     arguments = response.get('arguments')
     print(f'Task {task_number}: {description}\nArguments: {arguments}')

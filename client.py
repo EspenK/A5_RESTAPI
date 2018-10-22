@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
 import json
+from functools import reduce
 
 
 URL = 'http://104.248.47.74/dkrest/'
@@ -106,6 +107,28 @@ async def solve_task2(session_id: int) -> bool:
     arguments = await get_task(session_id, 2)
     data = {'sessionId': session_id,
             'msg': arguments[0]}
+    data = json.dumps(data)
+    response = await fetch(url=f'{URL}solve', data=data, method='POST')
+    response = json.loads(response)
+    success = await parse_solve(response)
+
+    return success
+
+
+async def solve_task3(session_id: int) -> bool:
+    """Solve task 3.
+
+    Multiply all the numbers in arguments and send the product.
+
+    :param session_id: The session ID to identify the client.
+    :return: True if the task was solved correctly.
+    """
+    arguments = await get_task(session_id, 3)
+    arguments = list(map(lambda num: int(num), arguments))
+    product = reduce((lambda x, y: x * y), arguments)
+
+    data = {'sessionId': session_id,
+            'result': product}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
     response = json.loads(response)

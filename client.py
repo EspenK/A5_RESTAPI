@@ -79,6 +79,8 @@ async def parse_solve(response: dict) -> bool:
 async def solve_task1(session_id: int) -> bool:
     """Solve task 1.
 
+    Send message 'Hello'.
+
     :param session_id: The session ID to identify the client.
     :return: True if the task was solved correctly.
     """
@@ -94,6 +96,13 @@ async def solve_task1(session_id: int) -> bool:
 
 
 async def solve_task2(session_id: int) -> bool:
+    """Solve task 2.
+
+    Echo the response from get_task(). Send arguments[0].
+
+    :param session_id: The session ID to identify the client.
+    :return: True if the task was solved correctly.
+    """
     arguments = await get_task(session_id, 2)
     data = {'sessionId': session_id,
             'msg': arguments[0]}

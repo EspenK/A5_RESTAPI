@@ -22,8 +22,12 @@ async def fetch(url: str, params: dict = None, data = None, method: str = 'GET')
             return await response.text()
 
 
-async def auth():
-    data = {'email': 'espenkve@gmail.com',
+async def auth() -> tuple:
+    """Authorize with NTNU email and registered phone number to get a session ID.
+
+    :return: A tuple with session ID and user ID.
+    """
+    data = {'email': 'espenkve@stud.ntnu.no',
             'phone': '99735026'}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}auth', data=data, method='POST')

@@ -78,6 +78,8 @@ def timeit(func):
     return wrapped
 
 
+@timeit
+@logger
 async def fetch(url: str, params: dict = None, data = None, method: str = 'GET') -> [dict, str, None]:
     """Make a request with the provided method, url and parameters and return the content
 
@@ -94,6 +96,8 @@ async def fetch(url: str, params: dict = None, data = None, method: str = 'GET')
             return await response.text()
 
 
+@timeit
+@logger
 async def auth() -> tuple:
     """Authorize with NTNU email and registered phone number to get a session ID.
 
@@ -112,6 +116,8 @@ async def auth() -> tuple:
     return session_id, user_id
 
 
+@timeit
+@logger
 async def get_task(session_id: int, task_number: int) -> list:
     """Ask the server for a task.
 
@@ -126,6 +132,8 @@ async def get_task(session_id: int, task_number: int) -> list:
     return arguments
 
 
+@timeit
+@logger
 async def parse_get_task(response: dict) -> list:
     task_number = response.get('taskNr')
     description = response.get('description')
@@ -135,6 +143,8 @@ async def parse_get_task(response: dict) -> list:
     return arguments
 
 
+@timeit
+@logger
 async def parse_solve(response: dict) -> bool:
     """Parse the response from a solve request.
 
@@ -149,6 +159,8 @@ async def parse_solve(response: dict) -> bool:
     return success
 
 
+@timeit
+@logger
 async def solve_task1(session_id: int) -> bool:
     """Solve task 1.
 
@@ -168,6 +180,8 @@ async def solve_task1(session_id: int) -> bool:
     return success
 
 
+@timeit
+@logger
 async def solve_task2(session_id: int) -> bool:
     """Solve task 2.
 
@@ -187,6 +201,8 @@ async def solve_task2(session_id: int) -> bool:
     return success
 
 
+@timeit
+@logger
 async def solve_task3(session_id: int) -> bool:
     """Solve task 3.
 
@@ -209,6 +225,8 @@ async def solve_task3(session_id: int) -> bool:
     return success
 
 
+@timeit
+@logger
 async def solve_task4(session_id: int) -> bool:
     """Solve task 4.
 
@@ -237,6 +255,8 @@ async def solve_task4(session_id: int) -> bool:
     return success
 
 
+@timeit
+@logger
 async def solve_secret(session_id: int) -> bool:
     """Solve secret task.
 
@@ -263,7 +283,8 @@ async def solve_secret(session_id: int) -> bool:
     return success
 
 
-
+@timeit
+@logger
 async def main():
     session_id, user_id = await auth()
 

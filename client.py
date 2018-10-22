@@ -195,6 +195,19 @@ async def solve_secret(session_id: int) -> bool:
 
 
 async def main():
+    session_id, user_id = await auth()
+
+    # coros = [solve_task1(session_id),
+    #          solve_task2(session_id)]
+    #
+    # solved = await asyncio.gather(*coros)
+    # print(solved)
+
+    await solve_task1(session_id)
+    await solve_task2(session_id)
+    await solve_task3(session_id)
+    await solve_task4(session_id)
+    await solve_secret(session_id)
 
     await session.close()
 

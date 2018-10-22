@@ -40,7 +40,7 @@ async def auth() -> tuple:
     return session_id, user_id
 
 
-async def get_task(session_id: int, task_number: int) -> None:
+async def get_task(session_id: int, task_number: int) -> list:
     """Ask the server for a task.
 
     :param session_id: The session ID to identify the client.
@@ -50,14 +50,16 @@ async def get_task(session_id: int, task_number: int) -> None:
     params = {'sessionId': session_id}
     response = await fetch(url=f'{URL}gettask/{task_number}', params=params)
     response = json.loads(response)
-    await parse_get_task(response)
+    arguments = await parse_get_task(response)
+    return arguments
 
 
-async def parse_get_task(response: dict) -> None:
+async def parse_get_task(response: dict) -> list:
     task_number = response.get('taskNr')
     description = response.get('description')
     arguments = response.get('arguments')
     print(f'Task {task_number}: {description}\nArguments: {arguments}')
+    return arguments
 
 
 async def parse_solve(response: dict) -> bool:
@@ -83,6 +85,18 @@ async def solve_task1(session_id: int) -> bool:
     await get_task(session_id, 1)
     data = {'sessionId': session_id,
             'msg': 'Hello'}
+    data = json.dumps(data)
+    response = await fetch(url=f'{URL}solve', data=data, method='POST')
+    response = json.loads(response)
+    success = await parse_solve(response)
+
+    return success
+
+
+async def solve_task2(session_id: int) -> bool:
+    arguments = await get_task(session_id, 2)
+    data = {'sessionId': session_id,
+            'msg': arguments[0]}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
     response = json.loads(response)

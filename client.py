@@ -166,6 +166,24 @@ async def parse_solve(response: dict) -> bool:
 
 @timeit
 @logger
+async def results(session_id: int) -> None:
+    """
+
+    :param session_id: The session ID to identify the client.
+    """
+    response = await fetch(url=f'{URL}results/{session_id}')
+    response = json.loads(response)
+    student = response.get('student')
+    achievements = response.get('results')
+    total_result = response.get('totalResult')
+    passed = response.get('passed')
+    passed_string = 'passed with score' if passed else 'have not passed, current score'
+    log.info(f'Student {student} {passed_string} {total_result}.')
+    log.info(f'Achievements: {achievements}')
+
+
+@timeit
+@logger
 async def solve_task1(session_id: int) -> bool:
     """Solve task 1.
 
@@ -298,6 +316,8 @@ async def main():
     await solve_task3(session_id)
     await solve_task4(session_id)
     await solve_secret(session_id)
+
+    await results(session_id)
 
     await session.close()
 

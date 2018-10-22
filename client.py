@@ -3,6 +3,7 @@ import aiohttp
 import json
 from functools import reduce
 from hashlib import md5
+import ipaddress
 
 
 URL = 'http://104.248.47.74/dkrest/'
@@ -164,6 +165,33 @@ async def solve_task4(session_id: int) -> bool:
     success = await parse_solve(response)
 
     return success
+
+
+async def solve_secret(session_id: int) -> bool:
+    """Solve secret task.
+
+    Use the ipaddress module to make a IPv4 network with the given properties.
+    Select the first IP address in the network and send it.
+
+    :param session_id: The session ID to identify the client.
+    :return: True if the task was solved correctly.
+    """
+    arguments = await get_task(session_id, 2016)
+    address = arguments[0]
+    netmask = arguments[1]
+
+    network = ipaddress.IPv4Network(f'{address}/{netmask}')
+    ip = str(list(network.hosts())[0])
+
+    data = {'sessionId': session_id,
+            'ip': ip}
+    data = json.dumps(data)
+    response = await fetch(url=f'{URL}solve', data=data, method='POST')
+    response = json.loads(response)
+    success = await parse_solve(response)
+
+    return success
+
 
 
 async def main():

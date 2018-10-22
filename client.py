@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 import json
 from functools import reduce
+from hashlib import md5
 
 
 URL = 'http://104.248.47.74/dkrest/'
@@ -129,6 +130,34 @@ async def solve_task3(session_id: int) -> bool:
 
     data = {'sessionId': session_id,
             'result': product}
+    data = json.dumps(data)
+    response = await fetch(url=f'{URL}solve', data=data, method='POST')
+    response = json.loads(response)
+    success = await parse_solve(response)
+
+    return success
+
+
+async def solve_task4(session_id: int) -> bool:
+    """Solve task 4.
+
+    The task returns a md5 hash. Find the number that was used to make the hash.
+    The number is between 0 and 99999. Make a for loop and make a hash for every
+    number until a hash is equal to the one we are checking against. Send the number.
+
+    :param session_id: The session ID to identify the client.
+    :return: True if the task was solved correctly.
+    """
+    arguments = await get_task(session_id, 4)
+    pin_hash = arguments[0]
+    pin = None
+    for number in range(0, 99999):
+        if md5(str(number).encode('utf-8')).hexdigest() == pin_hash:
+            pin = number
+            break
+
+    data = {'sessionId': session_id,
+            'pin': pin}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
     response = json.loads(response)

@@ -48,7 +48,7 @@ async def get_task(session_id: int, task_number: int) -> None:
     :return: None
     """
     params = {'sessionId': session_id}
-    response = await fetch(url=f'{URL}gettask/{task_number}')
+    response = await fetch(url=f'{URL}gettask/{task_number}', params=params)
     response = json.loads(response)
     await parse_get_task(response)
 
@@ -68,9 +68,25 @@ async def parse_solve(response: dict) -> bool:
     """
     success = response.get('success')
     comment = response.get('comment')
-    arguments = response.get('arguments')
 
-    print(f'{comment}\nArguments: {arguments}')
+    print(f'Comment: {comment}')
+
+    return success
+
+
+async def solve_task1(session_id: int) -> bool:
+    """Solve task 1.
+
+    :param session_id: The session ID to identify the client.
+    :return: True if the task was solved correctly.
+    """
+    await get_task(session_id, 1)
+    data = {'sessionId': session_id,
+            'msg': 'Hello'}
+    data = json.dumps(data)
+    response = await fetch(url=f'{URL}solve', data=data, method='POST')
+    response = json.loads(response)
+    success = await parse_solve(response)
 
     return success
 

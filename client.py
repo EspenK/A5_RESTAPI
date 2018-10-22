@@ -8,9 +8,14 @@ import logging
 import functools
 import inspect
 import datetime
+import configparser
 
 
 URL = 'http://104.248.47.74/dkrest/'
+
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 
 log = logging.getLogger(__name__)
@@ -103,8 +108,8 @@ async def auth() -> tuple:
 
     :return: A tuple with session ID and user ID.
     """
-    data = {'email': 'espenkve@stud.ntnu.no',
-            'phone': '99735026'}
+    data = {'email': config['auth']['email'],
+            'phone': config['auth']['phone']}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}auth', data=data, method='POST')
     response = json.loads(response)
@@ -271,7 +276,7 @@ async def solve_secret(session_id: int) -> bool:
     netmask = arguments[1]
 
     network = ipaddress.IPv4Network(f'{address}/{netmask}')
-    ip = str(list(network.hosts())[0])
+    ip = str(next(network.hosts()))
 
     data = {'sessionId': session_id,
             'ip': ip}
@@ -287,12 +292,6 @@ async def solve_secret(session_id: int) -> bool:
 @logger
 async def main():
     session_id, user_id = await auth()
-
-    # coros = [solve_task1(session_id),
-    #          solve_task2(session_id)]
-    #
-    # solved = await asyncio.gather(*coros)
-    # log.info(solved)
 
     await solve_task1(session_id)
     await solve_task2(session_id)

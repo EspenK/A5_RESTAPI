@@ -105,7 +105,7 @@ async def auth() -> tuple:
     response = await fetch(url=f'{URL}auth', data=data, method='POST')
     response = json.loads(response)
 
-    print(response.get('comment'))
+    log.info(response.get('comment'))
     session_id = response.get('sessionId')
     user_id = response.get('userId')
 
@@ -130,7 +130,8 @@ async def parse_get_task(response: dict) -> list:
     task_number = response.get('taskNr')
     description = response.get('description')
     arguments = response.get('arguments')
-    print(f'Task {task_number}: {description}\nArguments: {arguments}')
+    log.info(f'Task {task_number}: {description}')
+    log.info(f'Arguments: {arguments}')
     return arguments
 
 
@@ -143,7 +144,7 @@ async def parse_solve(response: dict) -> bool:
     success = response.get('success')
     comment = response.get('comment')
 
-    print(f'Comment: {comment}')
+    log.info(f'Comment: {comment}')
 
     return success
 
@@ -270,7 +271,7 @@ async def main():
     #          solve_task2(session_id)]
     #
     # solved = await asyncio.gather(*coros)
-    # print(solved)
+    # log.info(solved)
 
     await solve_task1(session_id)
     await solve_task2(session_id)

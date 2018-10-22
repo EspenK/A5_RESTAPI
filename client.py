@@ -60,6 +60,21 @@ async def parse_get_task(response: dict) -> None:
     print(f'Task {task_number}: {description}\nArguments: {arguments}')
 
 
+async def parse_solve(response: dict) -> bool:
+    """Parse the response from a solve request.
+
+    :param response: The response to parse.
+    :return: True if the task was solved correctly.
+    """
+    success = response.get('success')
+    comment = response.get('comment')
+    arguments = response.get('arguments')
+
+    print(f'{comment}\nArguments: {arguments}')
+
+    return success
+
+
 async def main():
 
     await session.close()

@@ -40,6 +40,22 @@ async def auth() -> tuple:
     return session_id, user_id
 
 
+async def get_task(session_id: int, task_number: int) -> None:
+    """Ask the server for a task.
+
+    :param session_id: The session ID to identify the client.
+    :param task_number: The task to get.
+    :return: None
+    """
+    params = {'sessionId': session_id}
+    response = await fetch(url=f'{URL}gettask/{task_number}')
+    response = json.loads(response)
+
+    description = response.get('description')
+    arguments = response.get('arguments')
+    print(f'Task {task_number}: {description}\nArguments: {arguments}')
+
+
 async def main():
 
     await session.close()

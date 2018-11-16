@@ -112,7 +112,8 @@ async def auth() -> tuple:
             'phone': config['auth']['phone']}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}auth', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
 
     log.info(response.get('comment'))
     session_id = response.get('sessionId')
@@ -132,7 +133,8 @@ async def get_task(session_id: int, task_number: int) -> list:
     """
     params = {'sessionId': session_id}
     response = await fetch(url=f'{URL}gettask/{task_number}', params=params)
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     arguments = await parse_get_task(response)
     return arguments
 
@@ -172,7 +174,8 @@ async def results(session_id: int) -> None:
     :param session_id: The session ID to identify the client.
     """
     response = await fetch(url=f'{URL}results/{session_id}')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     student = response.get('student')
     achievements = response.get('results')
     total_result = response.get('totalResult')
@@ -197,7 +200,8 @@ async def solve_task1(session_id: int) -> bool:
             'msg': 'Hello'}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     success = await parse_solve(response)
 
     return success
@@ -218,7 +222,8 @@ async def solve_task2(session_id: int) -> bool:
             'msg': arguments[0]}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     success = await parse_solve(response)
 
     return success
@@ -242,7 +247,8 @@ async def solve_task3(session_id: int) -> bool:
             'result': product}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     success = await parse_solve(response)
 
     return success
@@ -272,7 +278,8 @@ async def solve_task4(session_id: int) -> bool:
             'pin': pin}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     success = await parse_solve(response)
 
     return success
@@ -300,7 +307,8 @@ async def solve_secret(session_id: int) -> bool:
             'ip': ip}
     data = json.dumps(data)
     response = await fetch(url=f'{URL}solve', data=data, method='POST')
-    response = json.loads(response)
+    if type(response) is not dict:
+        response = json.loads(response)
     success = await parse_solve(response)
 
     return success
